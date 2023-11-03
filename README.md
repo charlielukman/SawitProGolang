@@ -52,3 +52,7 @@ To run test, run the following command:
 ```
 make test
 ```
+
+## Disclaimer
+
+It's not best practice to provide public key and private key on repo, usually it stored on config environment, but for simplicity, those are stored on repo
