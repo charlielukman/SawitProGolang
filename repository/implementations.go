@@ -14,9 +14,9 @@ import (
 
 func (r *Repository) CreateUser(ctx context.Context, user entities.User) (userID int, err error) {
 	err = r.Db.QueryRowContext(ctx,
-		`INSERT INTO users (full_name, phone_number, password, salt, created_at) 
+		`INSERT INTO users (full_name, phone_number, password, created_at) 
 		VALUES ($1, $2, $3, $4, NOW()) RETURNING id`,
-		user.FullName, user.PhoneNumber, user.Password, user.Salt).
+		user.FullName, user.PhoneNumber, user.Password).
 		Scan(&userID)
 	if err != nil {
 		return
@@ -46,10 +46,9 @@ func (r *Repository) GetUserByPhoneNumber(ctx context.Context, phoneNumber strin
 				full_name,
 				phone_number,
 				password,
-				salt
 			FROM users 
 			WHERE phone_number = $1`,
-		phoneNumber).Scan(&user.ID, &user.FullName, &user.PhoneNumber, &user.Password, &user.Salt)
+		phoneNumber).Scan(&user.ID, &user.FullName, &user.PhoneNumber, &user.Password)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return entities.User{}, internal.BadRequestError{
@@ -70,11 +69,10 @@ func (r *Repository) GetUserByID(ctx context.Context, id int) (entities.User, er
 				id,
 				full_name,
 				phone_number,
-				password,
-				salt
+				password
 			FROM users 
 			WHERE id = $1`,
-		id).Scan(&user.ID, &user.FullName, &user.PhoneNumber, &user.Password, &user.Salt)
+		id).Scan(&user.ID, &user.FullName, &user.PhoneNumber, &user.Password)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return entities.User{}, internal.ForbiddenError{

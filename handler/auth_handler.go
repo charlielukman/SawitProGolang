@@ -35,11 +35,7 @@ func (s *Server) Register(ctx echo.Context) error {
 	}
 
 	password := request.Password
-	salt, err := internal.GenerateSalt()
-	if err != nil {
-		return handleError(ctx, err)
-	}
-	hashedPassword, err := internal.HashPassword(password, salt)
+	hashedPassword, err := internal.HashPassword(password)
 	if err != nil {
 		return handleError(ctx, err)
 	}
@@ -48,7 +44,6 @@ func (s *Server) Register(ctx echo.Context) error {
 		FullName:    request.FullName,
 		PhoneNumber: request.PhoneNumber,
 		Password:    hashedPassword,
-		Salt:        salt,
 	}
 	id, err := s.Repository.CreateUser(ctx.Request().Context(), user)
 	if err != nil {
@@ -150,7 +145,7 @@ func (s *Server) Login(ctx echo.Context) error {
 		return handleError(ctx, err)
 	}
 
-	if err := s.PasswordComparer.ComparePassword(request.Password, user.Password, user.Salt); err != nil {
+	if err := s.PasswordComparer.ComparePassword(request.Password, user.Password); err != nil {
 		return handleError(ctx, internal.UnauthorizedError{
 			Message: "wrong password",
 		})

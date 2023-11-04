@@ -1,9 +1,7 @@
 package internal
 
 import (
-	"crypto/rand"
 	"crypto/rsa"
-	"encoding/hex"
 	"errors"
 	"os"
 	"strings"
@@ -27,7 +25,7 @@ type JWTClaim struct {
 }
 
 type PasswordComparer interface {
-	ComparePassword(password string, hashedPassword string, salt string) error
+	ComparePassword(password string, hashedPassword string) error
 }
 
 type PasswordComparerImpl struct{}
@@ -93,24 +91,14 @@ func GetBearerToken(ctx echo.Context) ([]byte, error) {
 	return []byte(token), nil
 }
 
-func GenerateSalt() (string, error) {
-	salt := make([]byte, 16)
-	if _, err := rand.Read(salt); err != nil {
-		return "", err
-	}
-	return hex.EncodeToString(salt), nil
-}
-
-func HashPassword(password string, salt string) (string, error) {
-	combined := []byte(password + salt)
-	hashedPassword, err := bcrypt.GenerateFromPassword(combined, bcrypt.DefaultCost)
+func HashPassword(password string) (string, error) {
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
 		return "", err
 	}
 	return string(hashedPassword), nil
 }
 
-func (p PasswordComparerImpl) ComparePassword(password string, hashedPassword string, salt string) error {
-	combined := []byte(password + salt)
-	return bcrypt.CompareHashAndPassword([]byte(hashedPassword), combined)
+func (p PasswordComparerImpl) ComparePassword(password string, hashedPassword string) error {
+	return bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
 }

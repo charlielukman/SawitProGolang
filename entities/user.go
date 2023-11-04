@@ -15,5 +15,4 @@ type User struct {
 	FullName    string
 	PhoneNumber string
 	Password    string
-	Salt        string
 }

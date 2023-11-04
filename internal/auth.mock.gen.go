@@ -89,15 +89,15 @@ func (m *MockPasswordComparer) EXPECT() *MockPasswordComparerMockRecorder {
 }
 
 // ComparePassword mocks base method.
-func (m *MockPasswordComparer) ComparePassword(password, hashedPassword, salt string) error {
+func (m *MockPasswordComparer) ComparePassword(password, hashedPassword string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ComparePassword", password, hashedPassword, salt)
+	ret := m.ctrl.Call(m, "ComparePassword", password, hashedPassword)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // ComparePassword indicates an expected call of ComparePassword.
-func (mr *MockPasswordComparerMockRecorder) ComparePassword(password, hashedPassword, salt interface{}) *gomock.Call {
+func (mr *MockPasswordComparerMockRecorder) ComparePassword(password, hashedPassword interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ComparePassword", reflect.TypeOf((*MockPasswordComparer)(nil).ComparePassword), password, hashedPassword, salt)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ComparePassword", reflect.TypeOf((*MockPasswordComparer)(nil).ComparePassword), password, hashedPassword)
 }

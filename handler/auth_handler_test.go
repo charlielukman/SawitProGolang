@@ -233,7 +233,6 @@ func TestServer_Login(t *testing.T) {
 					FullName:    "John Doe",
 					PhoneNumber: "+628123456789",
 					Password:    "Password123!",
-					Salt:        "salt",
 				}, nil)
 				mockRepo.EXPECT().UpdateUserLoginSuccess(gomock.Any(), gomock.Any()).Return(nil)
 				return mockRepo
@@ -245,7 +244,7 @@ func TestServer_Login(t *testing.T) {
 			},
 			mockPasswordComparer: func(ctrl *gomock.Controller) internal.PasswordComparer {
 				mockPasswordComparer := internal.NewMockPasswordComparer(ctrl)
-				mockPasswordComparer.EXPECT().ComparePassword(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil)
+				mockPasswordComparer.EXPECT().ComparePassword(gomock.Any(), gomock.Any()).Return(nil)
 				return mockPasswordComparer
 			},
 			expectedCode: http.StatusOK,
@@ -312,7 +311,6 @@ func TestServer_Login(t *testing.T) {
 					FullName:    "John Doe",
 					PhoneNumber: "+628123456789",
 					Password:    "Password123!",
-					Salt:        "salt",
 				}, nil)
 				return mockRepo
 			},
@@ -321,7 +319,7 @@ func TestServer_Login(t *testing.T) {
 			},
 			mockPasswordComparer: func(ctrl *gomock.Controller) internal.PasswordComparer {
 				mockPasswordComparer := internal.NewMockPasswordComparer(ctrl)
-				mockPasswordComparer.EXPECT().ComparePassword(gomock.Any(), gomock.Any(), gomock.Any()).Return(errors.New("wrong password"))
+				mockPasswordComparer.EXPECT().ComparePassword(gomock.Any(), gomock.Any()).Return(errors.New("wrong password"))
 				return mockPasswordComparer
 			},
 			expectedCode: http.StatusUnauthorized,

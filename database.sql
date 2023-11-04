@@ -13,7 +13,6 @@ CREATE TABLE users (
 	phone_number varchar(13) UNIQUE NOT NULL,
   full_name varchar(60) NOT NULL,
   "password" varchar(128) NOT NULL,
-  salt varchar(50) NOT NULL,
   successful_logins bigint NOT NULL DEFAULT 0,
   last_login_at timestamp,
   created_at timestamp NOT NULL DEFAULT NOW()
